@@ -1,5 +1,6 @@
 package com.example.springsecurity6.security;
 
+import com.example.springsecurity6.util.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     public final JwtFilter jwtFilter;
     private final LogoutHandler logoutHandler;
+    private final RateLimiter rateLimiter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         security
@@ -49,6 +51,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
+                .addFilterBefore(rateLimiter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout->logout
                         .logoutUrl("/api/v1/auth/logout")
