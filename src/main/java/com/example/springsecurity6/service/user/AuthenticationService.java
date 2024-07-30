@@ -34,8 +34,11 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.example.springsecurity6.util.IpUtil.getClientIp;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +51,7 @@ public class AuthenticationService {
     private final EmailSenderUtil emailSenderUtil;
     private final TokenUtil tokenUtil;
     public void register(RegistrationRequest request,HttpServletRequest servletRequest) {
-        String ipAddress = servletRequest.getRemoteAddr();
+        String ipAddress = getClientIp(servletRequest);
         User user = User.builder()
                 .firstname(request.firstname())
                 .lastname(request.lastname())
