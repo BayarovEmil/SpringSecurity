@@ -57,4 +57,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    public void deactivateAccount(Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        user.setEnabled(false);
+        user.setAccountLocked(true);
+        userRepository.save(user);
+    }
+
 }
